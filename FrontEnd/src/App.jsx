@@ -5,13 +5,15 @@ import { PlaceOrder } from './pages/PlaceOrder/PlaceOrder'
 
 import { Cart } from './pages/Cart/Cart'
 import { Home } from './pages/Home/home'
+import Footer from './components/Footer/Footer'
 
 
 
 
 const App = () => {
   return (
-    <div className='app'>
+    <>
+      <div className='app'>
       <Navbar/>
       <Routes>
         <Route path='/' element={<Home/>} />
@@ -19,6 +21,9 @@ const App = () => {
         <Route path='/order' element={<PlaceOrder/>}/>
       </Routes>
     </div>
+    <Footer/>
+    </>
+  
   )
 }
 
