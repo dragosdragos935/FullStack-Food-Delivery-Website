@@ -4,9 +4,11 @@ import { ExploreMenu } from '../../components/ExploreMenu/ExploreMenu'
 import FoodDisplay from '../../components/FoodDisplay/FoodDisplay';
 import AppDownload from '../../components/AppDownload/AppDownload';
 
-export const Home = () => {
+
+
+const home = () => {
  
- const [category,setCategory] = useState("all");
+    const [category,setCategory] = useState("all");
 
     return (
     <div>
@@ -15,4 +17,7 @@ export const Home = () => {
     <FoodDisplay category={category}/>
     <AppDownload />
     </div>
-)}
+  )
+}
+
+export default home
