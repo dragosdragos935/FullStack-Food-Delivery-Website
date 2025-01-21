@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState,useEffect } from 'react'
 import './Loginpopup.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../../context/StoreContext'
@@ -29,10 +29,10 @@ const Loginpopup = ({setShowLogin}) => {
 
       }
       else{
-        newUrl+="api/user/register"
+        newUrl+="/api/user/register"
       }
 
-      const response =await axios.post(newUrl,data);
+      const response = await axios.post(newUrl,data);
       if(response.data.success){
         setToken(response.data.token)
         localStorage.setItem("token",response.data.token);
