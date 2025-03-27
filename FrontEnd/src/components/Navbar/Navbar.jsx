@@ -62,7 +62,7 @@ export const Navbar = ({ setShowLogin }) => {
 
   // Handle click pe sugestie și redirecționare către pagina produsului
   const handleSuggestionClick = (food) => {
-    navigate(`/food/${food._id}`);
+    navigate(`http://localhost:4000/food/${food._id}`);
     setSearchTerm(""); // Resetăm căutarea
     setShowSearchResults(false); // Ascundem rezultatele
   };
