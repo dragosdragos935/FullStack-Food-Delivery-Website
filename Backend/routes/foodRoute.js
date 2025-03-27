@@ -8,26 +8,23 @@ import {
 } from "../controllers/foodController.js";
 import multer from "multer";
 
-const foodRouter = express.Router();
+const router = express.Router();
 
-// Image storage engine
+// Configurare storage pentru imagini
 const storage = multer.diskStorage({
     destination: "uploads",
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
+
 const upload = multer({ storage: storage });
 
-// Route pentru adăugarea unui aliment
-foodRouter.post("/add", upload.single("image"), addFood);
-foodRouter.get("/list", listFood);
-foodRouter.post("/remove", removeFood);
+// Definirea rutelor
+router.post("/add", upload.single("image"), addFood);      // POST /api/food/add
+router.get("/list", listFood);                            // GET /api/food/list
+router.post("/remove", removeFood);                       // POST /api/food/remove
+router.get("/search", searchFood);                       // GET /api/food/search
+router.get("/autocomplete", autocompleteFood);          // GET /api/food/autocomplete
 
-// Căutare produse (punctul c)
-foodRouter.get("/search", searchFood);
-
-// Căutare predictivă (punctul d)
-foodRouter.get("/autocomplete", autocompleteFood);
-
-export default foodRouter;
+export default router;

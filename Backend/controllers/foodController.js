@@ -61,50 +61,71 @@ const removeFood = async (req, res) => {
         res.status(500).json({ success: false, message: "Error removing food" });
     }
 };
+
+// Căutare produse
 // Căutare produse
 const searchFood = async (req, res) => {
     try {
-      const searchTerm = req.query.q;
-      console.log("Search term received:", searchTerm); // Log pentru depanare
-      
-      if (!searchTerm || searchTerm.trim().length < 2) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Termenul de căutare trebuie să conțină minim 2 caractere" 
-        });
-      }
-  
-      const foods = await foodModel.find({
-        $or: [
-          { name: { $regex: searchTerm, $options: 'i' } },
-          { description: { $regex: searchTerm, $options: 'i' } },
-          { category: { $regex: searchTerm, $options: 'i' } }
-        ]
-      }).lean();
-  
-      console.log("Found foods:", foods); // Log pentru verificare
-      
-      res.json({ 
-        success: true,
-        count: foods.length,
-        data: foods 
-      });
+        // Verificăm dacă există termenul de căutare
+        const searchTerm = req.query.q;
+        console.log("Căutare produs pentru termenul:", searchTerm);  // Verificăm termenul de căutare
+
+        // Validăm că termenul de căutare există
+        if (!searchTerm || searchTerm.trim() === '') {
+            console.log("Termenul de căutare este gol.");
+            return res.status(400).json({
+                success: false,
+                message: "Termenul de căutare nu poate fi gol.",
+            });
+        }
+
+        // Interogarea în baza de date
+        const foods = await foodModel.find({
+            $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },
+                { description: { $regex: searchTerm, $options: 'i' } },
+                { category: { $regex: searchTerm, $options: 'i' } }
+            ]
+        }).lean();
+
+        // Mesaj pentru a vedea ce produse am primit
+        console.log("Produse găsite (din MongoDB):", foods);  // Verificăm ce date au fost returnate
+
+        // Dacă sunt produse, le returnăm
+        if (foods && foods.length > 0) {
+            res.json({
+                success: true,
+                data: foods,
+            });
+        } else {
+            // Dacă nu sunt produse, returnăm un mesaj corespunzător
+            console.log(`Nu s-au găsit produse pentru "${searchTerm}".`);
+            res.status(404).json({
+                success: false,
+                message: `Nu s-au găsit produse pentru "${searchTerm}"`,
+            });
+        }
     } catch (error) {
-      console.error("Search error:", error);
-      res.status(500).json({ 
-        success: false,
-        message: "Eroare la căutare",
-        error: error.message 
-      });
+        // Dacă apare o eroare în proces, o logăm
+        console.error("Eroare la căutare:", error);
+        res.status(500).json({
+            success: false,
+            message: "Eroare la căutarea produselor",
+        });
     }
-  };
-  
-  // Autocomplete
-  const autocompleteFood = async (req, res) => {
+};
+
+
+
+// Autocomplete
+const autocompleteFood = async (req, res) => {
     try {
+        
       const searchTerm = req.query.q;
+      console.log("Autocomplete search term:", searchTerm);
       
       if (!searchTerm || searchTerm.length < 2) {
+        console.log("Autocomplete search term too short:", searchTerm);
         return res.json({ 
           success: true, 
           data: [] 
@@ -115,6 +136,8 @@ const searchFood = async (req, res) => {
         { name: { $regex: `^${searchTerm}`, $options: 'i' } },
         { _id: 1, name: 1, image: 1 }
       ).limit(5);
+
+      console.log("Autocomplete results:", foods);
   
       res.json({ 
         success: true, 
@@ -128,9 +151,12 @@ const searchFood = async (req, res) => {
       });
     }
   };
-  
-  // Detalii produs
-  const getFoodById = async (req, res) => {
+
+
+
+
+// Detalii produs
+const getFoodById = async (req, res) => {
     try {
       const food = await foodModel.findById(req.params.id);
       if (!food) {
@@ -150,7 +176,7 @@ const searchFood = async (req, res) => {
         message: "Eroare la obținerea produsului" 
       });
     }
-  };
+};
 
 export { 
     addFood, 
