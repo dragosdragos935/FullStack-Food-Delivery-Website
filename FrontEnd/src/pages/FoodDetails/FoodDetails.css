@@ -1,0 +1,104 @@
+.food-details {
+    padding: 60px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 50px;
+}
+
+.food-details img {
+    width: 50%;
+    border-radius: 15px;
+    object-fit: cover;
+    max-height: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.details-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details-info h1 {
+    color: #49557e;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.details-info .description {
+    color: #676767;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.details-info .category {
+    color: #49557e;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.details-info .price {
+    color: tomato;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.add-to-cart {
+    background-color: tomato;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    align-self: flex-start;
+}
+
+.add-to-cart:hover {
+    background-color: #e63c2b;
+}
+
+.loading, 
+.error, 
+.not-found {
+    text-align: center;
+    padding: 100px 20px;
+    color: #49557e;
+    font-size: 20px;
+}
+
+@media (max-width: 900px) {
+    .food-details {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .food-details img {
+        width: 100%;
+        max-height: 400px;
+    }
+    
+    .details-info h1 {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 550px) {
+    .food-details {
+        padding: 40px 20px;
+    }
+    
+    .details-info h1 {
+        font-size: 26px;
+    }
+    
+    .add-to-cart {
+        align-self: stretch;
+        text-align: center;
+    }
+}

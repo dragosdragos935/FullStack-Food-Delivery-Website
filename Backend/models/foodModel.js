@@ -10,5 +10,6 @@ const foodSchema=new mongoose.Schema({
 
 
 const foodModel=mongoose.models.food || mongoose.model("food",foodSchema);
-
+foodSchema.index({ name: 'text' }); // Index pentru căutare text
+foodSchema.index({ name: 1 });     // Index pentru autocomplete
 export default foodModel;
