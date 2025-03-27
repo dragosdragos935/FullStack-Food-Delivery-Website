@@ -61,10 +61,14 @@ export const Navbar = ({ setShowLogin }) => {
   };
 
   // Handle click pe sugestie și redirecționare către pagina produsului
-  const handleSuggestionClick = (food) => {
-    navigate(`http://localhost:4000/food/${food._id}`);
-    setSearchTerm(""); // Resetăm căutarea
-    setShowSearchResults(false); // Ascundem rezultatele
+  const handleSuggestionClick = async (e) => {
+    if (searchTerm.trim()) {
+      navigate('/search-results', {
+        state: { searchTerm }
+      });
+      setSearchTerm(""); // Resetăm căutarea
+      setShowSearchResults(false); // Ascundem rezultatele
+    }
   };
 
   // Ascunderea dropdown-ului după ce utilizatorul nu mai interacționează
