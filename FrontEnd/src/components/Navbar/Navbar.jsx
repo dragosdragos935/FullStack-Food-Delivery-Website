@@ -1,62 +1,75 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Navbar.css';
 import { assets } from '../../assets/assets';
 import { Link, useNavigate } from 'react-router-dom';
-import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
 
 export const Navbar = ({ setShowLogin }) => {
-  const [menu, setMenu] = useState("home");
-  const { getTotalCartAmount, token, setToken } = useContext(StoreContext);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // Căutare
+  const [searchResults, setSearchResults] = useState([]); // Rezultatele căutării
+  const [showSearchResults, setShowSearchResults] = useState(false); // Dacă se afișează rezultatele
+  const [debounceTimeout, setDebounceTimeout] = useState(null); // Timeout pentru căutare
   const navigate = useNavigate();
 
+  // UseEffect pentru a implementa debounce și a trimite cererea la server
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchTerm.length > 1) {
-        fetchSuggestions();
+    if (searchTerm.length > 1) {
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout); // Șterge timeout-ul anterior
       }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
+      const timeout = setTimeout(() => {
+        fetchSuggestions();
+      }, 500); // După 500ms de la ultima tastare trimite cererea
+      setDebounceTimeout(timeout);
+    } else {
+      setShowSearchResults(false); // Dacă termenul de căutare e gol, ascunde sugestiile
+    }
+  }, [searchTerm]); // Se va reactiva la schimbarea searchTerm
 
+  // Funcția care face cererea către backend pentru sugestii
   const fetchSuggestions = async () => {
     try {
-      const response = await axios.get(`/api/food/autocomplete?q=${searchTerm}`);
-      setSearchResults(response.data?.data || []);
-      setShowSearchResults(true);
+      console.log("Căutăm sugestii pentru:", searchTerm);
+      const response = await axios.get(`http://localhost:4000/api/food/autocomplete?q=${searchTerm}`);
+      console.log("Sugestii primite:", response.data); // Vezi ce primești de la API
+  
+      if (response.data?.success) {
+        setSearchResults(response.data.data || []);
+        setShowSearchResults(true);
+      } else {
+        setSearchResults([]);
+        setShowSearchResults(false);
+      }
     } catch (error) {
-      console.error("Autocomplete error:", error);
+      console.error("Eroare la căutarea sugestiilor:", error);
       setSearchResults([]);
       setShowSearchResults(false);
     }
   };
+  
 
+  // Handle search și redirecționare către pagina de rezultate
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      // Redirecționează către pagina SearchResults cu searchTerm
       navigate('/search-results', {
         state: { searchTerm }
       });
-      setSearchTerm("");  // Resetează câmpul de căutare
-      setShowSearchResults(false);  // Ascunde rezultatele de căutare
+      setSearchTerm(""); // Resetăm căutarea
+      setShowSearchResults(false); // Ascundem rezultatele
     }
   };
-  
 
+  // Handle click pe sugestie și redirecționare către pagina produsului
   const handleSuggestionClick = (food) => {
     navigate(`/food/${food._id}`);
-    setSearchTerm("");
-    setShowSearchResults(false);
+    setSearchTerm(""); // Resetăm căutarea
+    setShowSearchResults(false); // Ascundem rezultatele
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken("");
-    navigate("/");
+  // Ascunderea dropdown-ului după ce utilizatorul nu mai interacționează
+  const handleBlur = () => {
+    setTimeout(() => setShowSearchResults(false), 200); // Ascunde dropdown-ul după ce utilizatorul nu mai interacționează
   };
 
   return (
@@ -69,9 +82,9 @@ export const Navbar = ({ setShowLogin }) => {
               type="text"
               placeholder="Caută produse..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onFocus={() => setShowSearchResults(true)}
-              onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
+              onChange={(e) => setSearchTerm(e.target.value)} // Actualizare searchTerm
+              onFocus={() => setShowSearchResults(true)} // Afișează sugestiile când câmpul este focusat
+              onBlur={handleBlur} // Ascunde sugestiile când câmpul pierde focusul
             />
             <button type="submit">
               <img src={assets.search_icon} alt="search" />
@@ -85,7 +98,7 @@ export const Navbar = ({ setShowLogin }) => {
                 key={food._id}
                 className="search-result-item"
                 onClick={() => handleSuggestionClick(food)}
-                onMouseDown={(e) => e.preventDefault()}
+                onMouseDown={(e) => e.preventDefault()} // Previne schimbarea focus-ului pe click
               >
                 {food.name}
               </div>
@@ -94,28 +107,15 @@ export const Navbar = ({ setShowLogin }) => {
         )}
       </div>
       <ul className="navbar-menu">
-        <Link to='/' onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>Home</Link>
-        <a href='#explore-menu' onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>Menu</a>
-        <a href='#app-download' onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>Mobile App</a>
-        <a href='#footer' onClick={() => setMenu("contact-us")} className={menu === "contact-us" ? "active" : ""}>Contact Us</a>
+        <Link to='/' className="active">Home</Link>
+        <a href='#explore-menu'>Menu</a>
+        <a href='#app-download'>Mobile App</a>
+        <a href='#footer'>Contact Us</a>
       </ul>
       <div className="navbar-right">
-        <div className="navbar-search-icon">
-          <Link to='/cart'><img src={assets.basket_icon} alt="cart" /></Link>
-          <div className={getTotalCartAmount() === 0 ? "" : "dot"}></div>
-        </div>
-        {!token ? (
-          <button onClick={() => setShowLogin(true)}>Sign In</button>
-        ) : (
-          <div className='navbar-profile'>
-            <img src={assets.profile_icon} alt="profile" />
-            <ul className="nav-profile-dropdown">
-              <li><img src={assets.bag_icon} alt="orders" /><p>Orders</p></li>
-              <hr />
-              <li onClick={logout}><img src={assets.logout_icon} alt="logout" /><p>Logout</p></li>
-            </ul>
-          </div>
-        )}
+        <Link to='/cart'>
+          <img src={assets.basket_icon} alt="cart" />
+        </Link>
       </div>
     </div>
   );

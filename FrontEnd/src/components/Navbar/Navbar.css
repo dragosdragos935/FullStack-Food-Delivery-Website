@@ -270,3 +270,24 @@
         font-size: 14px;
     }
 }
+/* Navbar.css */
+.search-results-dropdown {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    width: 100%;
+    z-index: 10;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-result-item {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .search-result-item:hover {
+    background-color: #f1f1f1;
+  }
+  

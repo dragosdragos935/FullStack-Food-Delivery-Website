@@ -115,42 +115,70 @@ const searchFood = async (req, res) => {
     }
 };
 
-
+const searchFoodAutocomplete = async (req, res) => {
+    try {
+      const searchTerm = req.query.q;
+      const foods = await foodModel.find({
+        name: { $regex: searchTerm, $options: 'i' }
+      }).limit(5); // Limităm rezultatele pentru a nu returna prea multe
+  
+      if (foods.length > 0) {
+        res.json({
+          success: true,
+          data: foods,
+        });
+      } else {
+        res.json({
+          success: false,
+          data: [],
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Eroare la autocomplete' });
+    }
+  };
 
 // Autocomplete
 const autocompleteFood = async (req, res) => {
     try {
-        
-      const searchTerm = req.query.q;
-      console.log("Autocomplete search term:", searchTerm);
-      
-      if (!searchTerm || searchTerm.length < 2) {
-        console.log("Autocomplete search term too short:", searchTerm);
-        return res.json({ 
-          success: true, 
-          data: [] 
-        });
-      }
-  
-      const foods = await foodModel.find(
-        { name: { $regex: `^${searchTerm}`, $options: 'i' } },
-        { _id: 1, name: 1, image: 1 }
-      ).limit(5);
+        const searchTerm = req.query.q;  // Obține termenul de căutare din query string
+        if (!searchTerm || searchTerm.length < 2) {
+            return res.status(400).json({
+                success: false,
+                message: "Termenul de căutare trebuie să aibă cel puțin 2 caractere."
+            });
+        }
 
-      console.log("Autocomplete results:", foods);
-  
-      res.json({ 
-        success: true, 
-        data: foods 
-      });
+        // Căutăm produse care se potrivesc cu termenul de căutare în nume, descriere sau categorie
+        const foods = await foodModel.find({
+            $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },  // Căutare în câmpul 'name'
+                { description: { $regex: searchTerm, $options: 'i' } },  // Căutare în câmpul 'description'
+                { category: { $regex: searchTerm, $options: 'i' } }  // Căutare în câmpul 'category'
+            ]
+        }).limit(5)  // Limitează numărul de sugestii la 5
+          .lean();  // Optimizare pentru performanță, evită să returnezi documente Mongoose
+
+        // Răspuns dacă au fost găsite produse
+        if (foods && foods.length > 0) {
+            return res.json({
+                success: true,
+                data: foods  // Returnează produsele găsite
+            });
+        } else {
+            return res.status(404).json({
+                success: false,
+                message: "Nu au fost găsite produse pentru termenul introdus."
+            });
+        }
     } catch (error) {
-      console.error("Autocomplete Error:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Eroare la căutare predictivă" 
-      });
+        console.error("Eroare la autocomplete:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Eroare la căutarea produselor."
+        });
     }
-  };
+};
 
 
 
@@ -184,5 +212,6 @@ export {
     removeFood, 
     searchFood, 
     autocompleteFood, 
-    upload 
+    upload ,
+    searchFoodAutocomplete
 };
