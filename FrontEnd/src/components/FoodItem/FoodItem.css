@@ -68,3 +68,45 @@
 .food-item-counter img{
     width:30px;
 }
+
+.food-item-dietary-info {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.dietary-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.dietary-badge.vegan {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.dietary-badge.vegetarian {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+.dietary-badge.gluten-free {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.food-item-details {
+    display: flex;
+    gap: 15px;
+    margin: 10px 0;
+    color: #676767;
+    font-size: 14px;
+}
+
+.preparation-time, .calories {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

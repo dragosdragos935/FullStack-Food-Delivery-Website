@@ -286,6 +286,7 @@ const Add = ({ url }) => {
               name="prepTime"
               min="0"
             />
+            <small className="help-text">Important: Acest câmp este necesar pentru afișarea corectă a timpului de preparare.</small>
           </div>
           
           <div className="dietary-info flex-col">

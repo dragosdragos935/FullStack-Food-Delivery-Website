@@ -30,6 +30,9 @@ const addFood = async (req, res) => {
             allergens = allergens.split(',').map(item => item.trim());
         }
         
+        // Log pentru a vedea datele primite de la admin panel
+        console.log("Date primite de la admin panel:", req.body);
+        
         // Crearea noului obiect food cu toate specificațiile
         const newFood = new foodModel({
             name: req.body.name,
@@ -46,7 +49,8 @@ const addFood = async (req, res) => {
                 fat: req.body.fat || 0,
                 fiber: req.body.fiber || 0
             },
-            preparationTime: req.body.preparationTime || 0,
+            // Folosim prepTime din formular și îl mapăm la preparationTime din model
+            preparationTime: req.body.prepTime || 0,
             allergens: allergens,
             isVegan: req.body.isVegan === 'true',
             isVegetarian: req.body.isVegetarian === 'true',
@@ -54,6 +58,8 @@ const addFood = async (req, res) => {
             spicyLevel: req.body.spicyLevel || 0
         });
 
+        console.log("Obiect pregătit pentru salvare:", newFood);
+        
         await newFood.save();
         res.json({ success: true, message: "Food Added", data: newFood });
     } catch (error) {
@@ -241,23 +247,46 @@ const autocompleteFood = async (req, res) => {
 // Detalii produs
 const getFoodById = async (req, res) => {
     try {
-      const food = await foodModel.findById(req.params.id);
-      if (!food) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Produsul nu a fost găsit" 
+        const food = await foodModel.findById(req.params.id);
+        if (!food) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Produsul nu a fost găsit" 
+            });
+        }
+        
+        console.log("Date originale din DB:", JSON.stringify(food));
+        
+        // Ne asigurăm că toate proprietățile sunt definite
+        const processedFood = {
+            ...food.toObject(),
+            isVegan: food.isVegan || false,
+            isVegetarian: food.isVegetarian || false,
+            isGlutenFree: food.isGlutenFree || false,
+            preparationTime: food.preparationTime || 0,
+            calories: food.calories || 0,
+            ingredients: Array.isArray(food.ingredients) ? food.ingredients : [],
+            allergens: Array.isArray(food.allergens) ? food.allergens : [],
+            nutritionFacts: {
+                protein: food.nutritionFacts?.protein || 0,
+                carbs: food.nutritionFacts?.carbs || 0,
+                fat: food.nutritionFacts?.fat || 0,
+                fiber: food.nutritionFacts?.fiber || 0
+            }
+        };
+        
+        console.log("Date procesate trimise la frontend:", JSON.stringify(processedFood));
+        
+        res.json({ 
+            success: true, 
+            data: processedFood 
         });
-      }
-      res.json({ 
-        success: true, 
-        data: food 
-      });
     } catch (error) {
-      console.error("Get Food Error:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Eroare la obținerea produsului" 
-      });
+        console.error("Get Food Error:", error);
+        res.status(500).json({ 
+            success: false, 
+            message: "Eroare la obținerea produsului" 
+        });
     }
 };
 

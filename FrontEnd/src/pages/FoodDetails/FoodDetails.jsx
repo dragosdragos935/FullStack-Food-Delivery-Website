@@ -20,6 +20,8 @@ const FoodDetails = () => {
           // Procesăm datele pentru a ne asigura că toate câmpurile sunt disponibile
           const foodData = response.data.data;
           
+          console.log("Date primite de la server înainte de procesare:", foodData);
+          
           // Verificăm și procesăm câmpul ingrediente
           if (typeof foodData.ingredients === 'string') {
             foodData.ingredients = foodData.ingredients.split(',').map(item => item.trim());
@@ -34,12 +36,16 @@ const FoodDetails = () => {
             foodData.allergens = [];
           }
           
-          // Verificăm și procesăm câmpul informații dietetice
-          if (typeof foodData.dietaryInfo === 'string') {
-            foodData.dietaryInfo = foodData.dietaryInfo.split(',').map(item => item.trim());
-          } else if (!Array.isArray(foodData.dietaryInfo)) {
-            foodData.dietaryInfo = [];
-          }
+          // Verificăm isVegan, isVegetarian, isGlutenFree
+          foodData.isVegan = foodData.isVegan || false;
+          foodData.isVegetarian = foodData.isVegetarian || false;
+          foodData.isGlutenFree = foodData.isGlutenFree || false;
+          
+          // Verificăm timpul de preparare
+          foodData.preparationTime = foodData.preparationTime || 0;
+          
+          // Verificăm caloriile
+          foodData.calories = foodData.calories || 0;
           
           // Ne asigurăm că avem un obiect nutritionFacts complet
           if (!foodData.nutritionFacts) {
@@ -49,10 +55,15 @@ const FoodDetails = () => {
               fat: foodData.fat || 0,
               fiber: foodData.fiber || 0
             };
+          } else {
+            // Asigurăm că toate proprietățile sunt definite
+            foodData.nutritionFacts.protein = foodData.nutritionFacts.protein || 0;
+            foodData.nutritionFacts.carbs = foodData.nutritionFacts.carbs || 0;
+            foodData.nutritionFacts.fat = foodData.nutritionFacts.fat || 0;
+            foodData.nutritionFacts.fiber = foodData.nutritionFacts.fiber || 0;
           }
           
-          // Verifică dacă prepTime este disponibil sau folosim preparationTime
-          foodData.prepTime = foodData.prepTime || foodData.preparationTime || 0;
+          console.log("Date procesate în frontend:", foodData);
           
           setFood(foodData);
         } else {
@@ -262,10 +273,10 @@ const FoodDetails = () => {
           {/* Preparation Time */}
           <div className="spec-card">
             <h3>Timp de preparare</h3>
-            {food.prepTime ? (
+            {food.preparationTime > 0 ? (
               <div className="prep-time">
-                <span className="prep-time-value">{food.prepTime}</span>
-                <span className="prep-time-unit">minute</span>
+                <span className="prep-time-value">{food.preparationTime}</span>
+                <span className="prep-time-unit"> minute</span>
               </div>
             ) : (
               <p className="no-data-message">Informații despre timpul de preparare indisponibile</p>
@@ -275,11 +286,11 @@ const FoodDetails = () => {
           {/* Dietary Information */}
           <div className="spec-card">
             <h3>Informații dietetice</h3>
-            {food.dietaryInfo && food.dietaryInfo.length > 0 ? (
+            {(food.isVegan || food.isVegetarian || food.isGlutenFree) ? (
               <div className="dietary-container">
-                {food.dietaryInfo.map((info, index) => (
-                  <span key={index} className="dietary-badge">{info}</span>
-                ))}
+                {food.isVegan && <span className="dietary-badge vegan">Vegană</span>}
+                {food.isVegetarian && <span className="dietary-badge vegetarian">Vegetariană</span>}
+                {food.isGlutenFree && <span className="dietary-badge gluten-free">Fără Gluten</span>}
               </div>
             ) : (
               <p className="no-data-message">Informații dietetice indisponibile</p>
