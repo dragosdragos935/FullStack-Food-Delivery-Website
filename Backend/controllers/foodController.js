@@ -101,7 +101,8 @@ const searchFood = async (req, res) => {
     try {
         // Verificăm dacă există termenul de căutare
         const searchTerm = req.query.q;
-        console.log("Căutare produs pentru termenul:", searchTerm);  // Verificăm termenul de căutare
+        const sortOrder = req.query.sortOrder || 'desc'; // 'asc' sau 'desc'
+        console.log("Căutare produs pentru termenul:", searchTerm, "Ordonare:", sortOrder);
 
         // Validăm că termenul de căutare există
         if (!searchTerm || searchTerm.trim() === '') {
@@ -148,17 +149,38 @@ const searchFood = async (req, res) => {
             searchQuery.spicyLevel = { $lte: parseInt(req.query.maxSpicyLevel) };
         }
 
+        // Utilizăm MongoDB text search pentru a obține un scor de relevanță
+        // și sortăm după acest scor
+        const textSearchQuery = { $text: { $search: searchTerm } };
+        const projectionWithScore = { score: { $meta: "textScore" } };
+        const sortOptions = { score: { $meta: "textScore" } };
+
         // Interogarea în baza de date
-        const foods = await foodModel.find(searchQuery).lean();
+        let foods;
+        
+        // Încercăm mai întâi căutarea text pentru a obține scorul de relevanță
+        try {
+            foods = await foodModel.find(
+                { ...textSearchQuery, ...searchQuery },
+                projectionWithScore
+            )
+            .sort(sortOrder === 'asc' ? { score: 1 } : sortOptions)
+            .lean();
+        } catch (textSearchError) {
+            console.log("Text search error, fallback to regular search:", textSearchError);
+            // Dacă căutarea text eșuează, cădem înapoi pe căutarea regulată
+            foods = await foodModel.find(searchQuery).lean();
+        }
 
         // Mesaj pentru a vedea ce produse am primit
-        console.log("Produse găsite (din MongoDB):", foods);  // Verificăm ce date au fost returnate
+        console.log(`Produse găsite (din MongoDB): ${foods.length}`);
 
         // Dacă sunt produse, le returnăm
         if (foods && foods.length > 0) {
             res.json({
                 success: true,
                 data: foods,
+                sortOrder: sortOrder
             });
         } else {
             // Dacă nu sunt produse, returnăm un mesaj corespunzător

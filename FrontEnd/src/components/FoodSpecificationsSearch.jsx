@@ -9,8 +9,8 @@ const FoodSpecificationsSearch = () => {
   const [loading, setLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
-    sortBy: 'name',
-    sortOrder: 'asc',
+    sortBy: 'relevance',
+    sortOrder: 'desc',
     category: 'all',
     priceRange: {
       min: 0,
@@ -68,6 +68,8 @@ const FoodSpecificationsSearch = () => {
       if (searchQuery.trim()) {
         params.append('q', searchQuery);
       }
+      
+      params.append('sortOrder', filters.sortOrder);
       
       if (filters.isVegan) {
         params.append('isVegan', 'true');
@@ -150,7 +152,11 @@ const FoodSpecificationsSearch = () => {
 
         // Sort results
         results.sort((a, b) => {
-          if (filters.sortBy === 'name') {
+          if (filters.sortBy === 'relevance') {
+            return filters.sortOrder === 'asc'
+              ? a.similarity - b.similarity
+              : b.similarity - a.similarity;
+          } else if (filters.sortBy === 'name') {
             return filters.sortOrder === 'asc' 
               ? a.name.localeCompare(b.name)
               : b.name.localeCompare(a.name);
@@ -537,6 +543,7 @@ const FoodSpecificationsSearch = () => {
               value={filters.sortBy} 
               onChange={(e) => handleFilterChange('sortBy', e.target.value)}
             >
+              <option value="relevance">Relevanță</option>
               <option value="name">Nume</option>
               <option value="price">Preț</option>
               <option value="category">Categorie</option>
