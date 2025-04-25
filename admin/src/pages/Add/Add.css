@@ -8,26 +8,30 @@
 
 .add form{
     gap:20px;
+}
 
-}
 .add-img-upload img{
-width:120px;
+    width:120px;
 }
+
 .add-product-name,.add-product-description{
     width:max(40%,280px);
 }
+
 .add-product-name input,.add-product-description textarea{
     padding:10px;
 }
+
 .add-category-price{
     display: flex;
     gap:30px;
-
 }
+
 .add-category-price select,.add-category-price input{
     max-width: 120px;
     padding: 10px;
 }
+
 .add-btn{
     max-width: 120px;
     border: none;
@@ -35,4 +39,178 @@ width:120px;
     background-color: black;
     color:white;
     cursor:pointer;
+}
+
+/* Stiluri pentru noile elemente adăugate */
+.specifications-heading {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+/* Layout flexibil pentru secțiuni */
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Stiluri pentru secțiunea nutrițională */
+.nutritional-section {
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.nutritional-section h4 {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.nutritional-values {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.nutritional-item {
+    min-width: 100px;
+}
+
+.nutritional-item input {
+    padding: 8px;
+    width: 80px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Stiluri pentru ingrediente și alergeni */
+.ingredients-allergens {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.ingredients-section, .allergens-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.ingredients-section textarea, .allergens-section textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Stiluri pentru timp de preparare și informații dietetice */
+.prep-diet-section {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.prep-time {
+    min-width: 150px;
+}
+
+.prep-time input {
+    padding: 8px;
+    width: 80px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.dietary-info {
+    flex: 1;
+    min-width: 250px;
+}
+
+.dietary-info textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 60px;
+    resize: vertical;
+}
+
+/* Stiluri pentru etichete dietetice */
+.dietary-labels {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.dietary-labels h4 {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.dietary-checkboxes {
+    display: flex;
+    gap: 20px;
+}
+
+.dietary-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dietary-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+/* Stiluri pentru nivelul de condimente */
+.spicy-level {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.spicy-level input[type="range"] {
+    width: 250px;
+    margin: 10px 0;
+}
+
+.spicy-display {
+    display: flex;
+    gap: 5px;
+}
+
+.pepper {
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+.pepper.active {
+    opacity: 1;
+}
+
+/* Media query pentru dispozitive mobile */
+@media (max-width: 768px) {
+    .add {
+        width: 90%;
+    }
+    
+    .flex-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .nutritional-values {
+        overflow-x: auto;
+    }
+    
+    .ingredients-section, .allergens-section,
+    .dietary-info {
+        width: 100%;
+    }
 }

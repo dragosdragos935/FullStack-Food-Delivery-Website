@@ -10,7 +10,7 @@ const stripe =new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const placeOrder = async(req,res)=>{
 
-    const frontend_url = "http://localhost:5173";
+    const frontend_url = "http://localhost:5174";
 
     
      try {
@@ -74,6 +74,7 @@ try {
 } catch (error) {
     console.log(error)
     res.json({success:false,message:"Error"})
+    
     
 }
 }

@@ -4,7 +4,8 @@ import {
     listFood,
     removeFood,
     searchFood,
-    autocompleteFood 
+    autocompleteFood,
+    getFoodById
 } from "../controllers/foodController.js";
 import multer from "multer";
 
@@ -26,5 +27,6 @@ router.get("/list", listFood);                            // GET /api/food/list
 router.post("/remove", removeFood);                       // POST /api/food/remove
 router.get("/search", searchFood);                       // GET /api/food/search
 router.get("/autocomplete", autocompleteFood);          // GET /api/food/autocomplete
+router.get("/:id", getFoodById);
 
 export default router;

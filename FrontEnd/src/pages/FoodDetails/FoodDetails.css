@@ -1,104 +1,406 @@
-.food-details {
-    padding: 60px 5%;
+/* Product details container */
+.product-details-container {
     max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    gap: 50px;
-}
-
-.food-details img {
-    width: 50%;
-    border-radius: 15px;
-    object-fit: cover;
-    max-height: 500px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.details-info {
-    flex: 1;
+    margin: 2rem auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 2rem;
+    padding: 0 1.5rem;
 }
 
-.details-info h1 {
-    color: #49557e;
-    font-size: 36px;
-    margin-bottom: 20px;
+/* Top section - Product card with image and basic info */
+.product-card {
+    display: flex;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
-.details-info .description {
-    color: #676767;
-    font-size: 16px;
+.product-image {
+    position: relative;
+    width: 40%;
+    min-width: 350px;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info h1 {
+    font-size: 2.5rem;
+    margin: 0 0 0.75rem;
+    color: #333;
+    font-weight: 700;
+}
+
+.product-rating {
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+.star {
+    font-size: 1.25rem;
+    margin-right: 3px;
+}
+
+.star.filled {
+    color: #ff6b6b;
+}
+
+.star.empty {
+    color: #ccc;
+}
+
+.product-description {
+    font-size: 1.1rem;
     line-height: 1.6;
-    margin-bottom: 25px;
+    color: #666;
+    margin-bottom: 1.5rem;
 }
 
-.details-info .category {
-    color: #49557e;
-    font-size: 16px;
-    margin-bottom: 15px;
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
-.details-info .price {
-    color: tomato;
-    font-size: 28px;
-    font-weight: bold;
-    margin: 20px 0;
+.product-category {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
 }
 
-.add-to-cart {
-    background-color: tomato;
+.product-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ff6b6b;
+    margin: 1.5rem 0 2rem;
+}
+
+.add-to-cart-btn {
+    background-color: #ff6b6b;
     color: white;
     border: none;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-size: 16px;
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
-    align-self: flex-start;
+    transition: background-color 0.2s;
+    width: fit-content;
+    margin-top: auto;
 }
 
-.add-to-cart:hover {
-    background-color: #e63c2b;
+.add-to-cart-btn:hover {
+    background-color: #ff5252;
 }
 
-.loading, 
-.error, 
-.not-found {
+/* Cart controls */
+.cart-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto;
+}
+
+.cart-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    background-color: #ff6b6b;
+    transition: background-color 0.2s;
+}
+
+.cart-btn:hover {
+    background-color: #ff5252;
+}
+
+.cart-quantity {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Dietary labels */
+.dietary-labels {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.diet-label {
+    padding: 0.3rem 0.6rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+}
+
+.diet-label.vegan {
+    background-color: #4caf50;
+}
+
+.diet-label.vegetarian {
+    background-color: #8bc34a;
+}
+
+.diet-label.gluten-free {
+    background-color: #ff9800;
+}
+
+/* Spicy level */
+.spicy-level {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.spicy-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #666;
+}
+
+.pepper {
+    font-size: 1.2rem;
+}
+
+/* Specifications section */
+.product-specifications {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.product-specifications h2 {
+    font-size: 1.75rem;
+    margin: 0 0 1.5rem;
+    color: #333;
+    font-weight: 700;
+}
+
+.specifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.spec-card {
+    background-color: #f8f9fa;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.spec-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+/* Nutrition section */
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 1rem;
+}
+
+.nutrition-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    padding: 100px 20px;
-    color: #49557e;
-    font-size: 20px;
 }
 
+.nutrition-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ff6b6b;
+}
+
+.nutrition-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.2rem;
+}
+
+/* Ingredients section */
+.ingredients-list {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+    color: #666;
+    padding: 0;
+}
+
+.ingredients-list li {
+    margin-bottom: 0.5rem;
+}
+
+/* Allergens section */
+.allergens-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.allergen-tag {
+    background-color: #ffe0e0;
+    color: #d32f2f;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Preparation time */
+.prep-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+}
+
+.prep-icon {
+    font-size: 1.5rem;
+}
+
+.prep-text {
+    font-size: 1.1rem;
+}
+
+/* Dietary information */
+.dietary-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.dietary-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dietary-label {
+    font-weight: 500;
+    color: #333;
+    width: 100px;
+}
+
+.dietary-value {
+    font-weight: 600;
+}
+
+.dietary-value.yes {
+    color: #4caf50;
+}
+
+.dietary-value.no {
+    color: #f44336;
+}
+
+/* Spicy level indicator */
+.spicy-indicator {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.spicy-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #e5e5e5;
+    display: inline-block;
+}
+
+.spicy-dot.active {
+    background-color: #ff6b6b;
+}
+
+/* Loading and error states */
+.loading, .error {
+    text-align: center;
+    padding: 5rem;
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.error {
+    color: #ff5252;
+}
+
+/* Responsive design */
 @media (max-width: 900px) {
-    .food-details {
+    .product-card {
         flex-direction: column;
-        gap: 30px;
     }
     
-    .food-details img {
+    .product-image {
         width: 100%;
-        max-height: 400px;
-    }
-    
-    .details-info h1 {
-        font-size: 30px;
+        min-width: 0;
+        height: 300px;
     }
 }
 
-@media (max-width: 550px) {
-    .food-details {
-        padding: 40px 20px;
+@media (max-width: 600px) {
+    .product-details-container {
+        padding: 0 1rem;
+        margin: 1rem auto;
     }
     
-    .details-info h1 {
-        font-size: 26px;
+    .product-info {
+        padding: 1.5rem;
     }
     
-    .add-to-cart {
-        align-self: stretch;
-        text-align: center;
+    .product-info h1 {
+        font-size: 1.75rem;
+    }
+    
+    .product-description {
+        font-size: 1rem;
+    }
+    
+    .product-price {
+        font-size: 1.5rem;
+    }
+    
+    .add-to-cart-btn {
+        width: 100%;
+    }
+    
+    .specifications-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cart-controls {
+        width: 100%;
+        justify-content: space-between;
     }
 }

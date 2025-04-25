@@ -6,7 +6,6 @@ import userRouter from "./routes/userRoute.js";
 import 'dotenv/config';
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
-import { autocompleteFood } from "./controllers/foodController.js";  // Importă funcția autocompleteFood
 
 // app config
 const app = express();
@@ -16,9 +15,6 @@ const port = 4000;
 app.use(express.json());
 app.use(cors());
 
-// db connection
-connectDB();
-
 // API endpoints
 app.use("/api/food", foodRouter);
 app.use("/images", express.static('uploads'));
@@ -26,13 +22,12 @@ app.use("/api/user", userRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 
-// Adaugă endpoint-ul pentru autocomplete
-app.get("/api/food/autocomplete", autocompleteFood);  // Noua rută pentru autocomplete
-
 app.get("/", (req, res) => {
   res.send("API Working");
 });
 
+// Start server
 app.listen(port, () => {
-  console.log(`Server Started on http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
+    connectDB();
 });

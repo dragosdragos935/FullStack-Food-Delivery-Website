@@ -9,6 +9,7 @@ import Loginpopup from './components/LoginPopup/Loginpopup'
 import Verify from './pages/Verify/Verify'
 import SearchResults from './pages/SearchResults/SearchResults'
 import FoodDetails from './pages/FoodDetails/FoodDetails'
+import FoodSearch from './pages/FoodSearch/FoodSearch'
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -25,7 +26,7 @@ const App = () => {
           <Route path='/order' element={<PlaceOrder/>}/>
           <Route path='/verify' element={<Verify/>}/>
           <Route path="/search-results" element={<SearchResults />} />
-
+          <Route path="/food-search" element={<FoodSearch />} />
           <Route path='/food/:id' element={<FoodDetails/>}/>
         </Routes>
       </div>
